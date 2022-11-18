@@ -1,66 +1,86 @@
-import React from 'react'
+import React,{useRef,useEffect} from 'react'
 import './header.css'
 import { NavLink } from 'react-router-dom'
 import { Container, Row } from 'reactstrap'
+import { motion } from 'framer-motion'
 import logo from '../../assets/images/eco-logo.png'
 import user__icon from '../../assets/images/user-icon.png'
-const nav__link=[
+const nav__link = [
     {
-        path:'home',
-        display:'Home'
+        path: 'home',
+        display: 'Home'
     },
     {
-        path:'shop',
-        display:'Shop'
-    },{
-        path:'cart',
-        display:'Cart'
+        path: 'shop',
+        display: 'Shop'
+    }, {
+        path: 'cart',
+        display: 'Cart'
     },
 ]
 
 const Header = () => {
+    const headerRef=useRef(null);
+    const stickyHeaderFunc=()=>{
+        window.addEventListener("scroll",()=>{
+            if(document.body.scrollTop > 80 || document.documentElement.scrollTop >80 ){
+                headerRef.current.classlist.add("sticky__header");
+            }else{
+                headerRef.current.classlist.remove("sticky__header");
+            }
+        });
+    };
+    useEffect(()=>{
+        stickyHeaderFunc()
+        return ()=>window.removeEventListener("scroll",stickyHeaderFunc);
+    });
     return (
-    <header className='header'>
-        <Container>
-            <Row>
-                <div className="nav__wrapper">
-                    <div className="logo">
-                        <img src={logo} alt="" />
-                        <div>
-                            <h1>Multimart</h1>
-                            <p>Since 1995</p>
+        <header className='header'>
+            <Container>
+                <Row>
+                    <div className="nav__wrapper">
+                        <div className="logo">
+                            <img src={logo} alt="" />
+                            <div>
+                                <h1>Multimart</h1>
+                            </div>
                         </div>
-                    </div>
-                    <div className="navigation">
-                        <ul className="menu">
-                            {
-                                nav__link.map((item,index)=>(
-                                    <li className='nav__item' key={index}>
-                                        <NavLink to={item.path} className={(navClass)=>
-                                        navClass.isActive ? 'nav__active' : ''}>{item.display}</NavLink>
-                                    </li>
-                                ))
-                            }
-                        </ul>
-                    </div>
-                    <div className="nav__icons">
+                        <div className="navigation">
+                            <ul className="menu">
+                                {
+                                    nav__link.map((item, index) => (
+                                        <li className='nav__item' key={index}>
+                                            <NavLink to={item.path} className={(navClass) =>
+                                                navClass.isActive ? 'nav__active' : ''}>{item.display}</NavLink>
+                                        </li>
+                                    ))
+                                }
+                            </ul>
+                        </div>
+                        <div className="nav__icons">
 
-                        <span className='fav__icon'><i class="ri-heart-line"></i></span>
-                        <span className='cart-icon'>
-                            <i class="ri-shopping-bag-line"></i>
-                        </span>
-                        <span><img src={user__icon} alt="" /></span>
+                            <span className='fav__icon'><i class="ri-heart-line"></i>
+                            <span className='badge'>1</span>
 
+                            </span>
+                            <span className='cart__icon'>
+                                <i class="ri-shopping-bag-line"></i>
+                                <span className='badge'>1</span>
+
+                            </span>
+                            <span>
+                                <motion.img whileTap={{ scale: 1.2 }} src={user__icon} alt="" /></span>
+                                <div className="mobile__menu">
+                            <span>
+                                <i class='ri-menu-line'></i>
+                            </span>
+                        </div>
+                        </div>
+                        
                     </div>
-                    <div className="mobile__menu">
-                        <span>
-                            <i class='ri-menu-line'></i>
-                        </span>
-                    </div>
-                </div>
-            </Row>
-        </Container>
-    </header>
+                </Row>
+            </Container>
+        </header>
     );
 };
 
